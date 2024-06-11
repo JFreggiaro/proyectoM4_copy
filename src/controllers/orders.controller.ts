@@ -42,9 +42,4 @@ export class OrdersController {
   async addOrder(@Body() addOrder: CreateOrderDto) {
     return await this.ordersService.addOrder(addOrder);
   }
-
-  @Delete(':id')
-  async deleteOrderById(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.ordersService.deleteOrderById(id);
-  }
 }

@@ -15,7 +15,5 @@ export class OrdersService {
     return await this.orderRepository.addOrder(addOrder);
   }
 
-  async deleteOrderById(id: string) {
-    return await this.orderRepository.deleteOrderById(id);
-  }
+
 }

@@ -106,34 +106,4 @@ export class OrdersRepository {
     };
   }
 
-  async deleteOrderById(id: string) {
-    const order = await this.ordersRepository.findOne({
-      where: { id: id },
-      relations: { orderDetails: true },
-    });
-
-    const orderDetails = await this.orderDetailsRepository.findOne({
-      where: { id: order.orderDetails.id },
-      relations: { products: true },
-    });
-
-    const products = orderDetails.products;
-
-    if (!products) {
-      throw new BadRequestException('No se encontraron productos');
-    }
-
-    const productoEncontrado = products.map((producto) => producto.id);
-
-    for (let i = 0; i < productoEncontrado.length; i++) {
-      const productoModificar = await this.productsRepository.findOne({
-        where: { id: productoEncontrado[i] },
-      });
-      productoModificar.stock += 1;
-      await this.productsRepository.save(productoModificar);
-    }
-
-    await this.orderDetailsRepository.remove(orderDetails);
-    await this.ordersRepository.remove(order);
-  }
 }

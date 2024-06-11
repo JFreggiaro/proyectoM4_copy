@@ -119,18 +119,28 @@ export class UsersRepository {
   }
 
   async deleteUser(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+    try {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+      await this.userRepository.delete(id);
+      const { password, ...userWithOutPassword } = user;
+      return {message:"Usuario eliminado" ,userWithOutPassword};
+      
+    } catch (error) {
+      throw new BadRequestException("El usuario no puede ser eliminado")
     }
-    await this.userRepository.delete(id);
-    const { password, ...userWithOutPassword } = user;
-    return {message:"Usuario eliminado" ,userWithOutPassword};
   }
 
   async loginUserByEmail(email: string): Promise<Users> {
-    const user = await this.userRepository.findOneBy({ email });
-
-    return user;
+    try {
+      const user = await this.userRepository.findOneBy({ email });
+  
+      return user;
+      
+    } catch (error) {
+      throw new NotFoundException("El usuario no fue encontrado")
+    }
   }
 }
