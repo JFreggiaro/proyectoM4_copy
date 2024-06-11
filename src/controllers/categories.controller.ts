@@ -1,7 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { CategoriesService } from 'src/services/categories.service';
 import productsData from '../utils/data.json';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from '../decorators/roles.decorator';
+import { Role } from '../role.enum';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -11,16 +15,13 @@ export class CategoriesController {
   @ApiOperation({ summary: 'Obtiene todas las categorias' })
   @ApiResponse({ status: 200, description: 'Categorias encontradas' })
   @ApiResponse({ status: 404, description: 'Categorias no encontradas' })
+  @ApiBearerAuth()
   @Get()
+  @Roles(Role.Admin && Role.User)
+  @UseGuards(AuthGuard,RolesGuard)
   getCategories() {
     return this.categoriesService.getCategories();
   }
-
-  // @Get('seeder')
-  // async addCategories(): Promise<void> {
-  //   await this.categoriesService.seedCategories();
-  //   await this.categoriesService.addCategories()
-  // }
 
   @ApiOperation({ summary: 'Crea categorias' })
   @ApiResponse({ status: 200, description: 'Categorias creadas' })

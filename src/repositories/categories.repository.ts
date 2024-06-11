@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Categories } from '../entities/categories.entity';
 import { Repository } from 'typeorm';
+import * as data from '../utils/data.json'
 
 @Injectable()
 export class CategoriesRepository {

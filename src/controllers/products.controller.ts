@@ -18,6 +18,9 @@ import * as productsData from '../utils/data.json'; // Importar el archivo JSON
 import { Products } from '../entities/products.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from '../decorators/roles.decorator';
+import { Role } from '../role.enum';
+import { RolesGuard } from '../guards/roles.guard';
 
 @ApiTags('Products')
 @Controller('products')
@@ -38,6 +41,8 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'No se encontraron productos' })
   @ApiBearerAuth()
   @Get()
+  @Roles(Role.Admin && Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   getProducts(
     @Query('page') page: number = 1,
@@ -61,7 +66,8 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Producto no encontrado' })
   @ApiBearerAuth()
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin && Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   getProductById(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.getProductsById(id);
@@ -72,7 +78,8 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Error al actualizar el producto' })
   @ApiBearerAuth()
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   updateProductById(
     @Param('id', ParseUUIDPipe) id: string,
@@ -86,7 +93,8 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Error al eliminar el producto' })
   @ApiBearerAuth()
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   deleteProduct(@Param('id', ParseUUIDPipe) id: string) {
     return this.productsService.deleteProducts(id);

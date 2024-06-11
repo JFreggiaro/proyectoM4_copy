@@ -17,6 +17,9 @@ import {
 import { CreateOrderDto } from '../dto/order.dto';
 import { AuthGuard } from '../guards/auth.guard';
 import { OrdersService } from '../services/orders.service';
+import { Roles } from '../decorators/roles.decorator';
+import { Role } from '../role.enum';
+import { RolesGuard } from '../guards/roles.guard';
 
 @ApiTags('Orders')
 @Controller('orders')
@@ -28,7 +31,8 @@ export class OrdersController {
   @ApiResponse({ status: 404, description: 'Pedido no encontrado' })
   @ApiBearerAuth()
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin && Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
   getOrderById(@Param('id', ParseUUIDPipe) id: string) {
     return this.ordersService.getOrderById(id);
   }
@@ -38,7 +42,8 @@ export class OrdersController {
   @ApiResponse({ status: 400, description: 'Error al crear la orden' })
   @ApiBearerAuth()
   @Post()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin && Role.User)
+  @UseGuards(AuthGuard, RolesGuard)
   async addOrder(@Body() addOrder: CreateOrderDto) {
     return await this.ordersService.addOrder(addOrder);
   }

@@ -16,11 +16,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // @Get('')
-  // getAuth() {
-  //   return this.authService.getAllAuth();
-  // }
-
   @ApiOperation({ summary: 'Crea un nuevo usuario' })
   @ApiResponse({ status: 200, description: "Usuario creado" })
   @ApiResponse({ status: 400, description: "Email ya registrado" })

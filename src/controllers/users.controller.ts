@@ -6,10 +6,8 @@ import {
   HttpCode,
   Param,
   ParseUUIDPipe,
-  Post,
   Put,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../guards/auth.guard';
@@ -59,7 +57,8 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @ApiBearerAuth()
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.getUsersById(id);
@@ -70,7 +69,8 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @ApiBearerAuth()
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   updateUser(@Param('id', ParseUUIDPipe) id: string, @Body() user: Partial<CreateUsersDto>) {
     return this.usersService.updateUsers(id, user);
@@ -82,7 +82,8 @@ export class UsersController {
   @ApiResponse({ status: 404, description: 'Usuario no encontrado' })
   @ApiBearerAuth()
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @HttpCode(200)
   deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.deleteUsers(id);

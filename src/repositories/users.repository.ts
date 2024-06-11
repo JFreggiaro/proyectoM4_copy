@@ -78,7 +78,7 @@ export class UsersRepository {
         skip: skip,
       });
 
-      const userFind = (await userPage).map(({ password, ...user }) => user);
+      // const userFind = (await userPage).map(({ password, ...user }) => user);
       // return { message: 'Usuarios encontrados', userFind };
       return (await userPage).map(({ password, ...user }) => user);
     } catch (error) {

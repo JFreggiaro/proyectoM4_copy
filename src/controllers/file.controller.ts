@@ -14,6 +14,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '../guards/auth.guard';
 import { FileService } from '../services/files.service';
+import { Role } from '../role.enum';
+import { Roles } from '../decorators/roles.decorator';
+import { RolesGuard } from '../guards/roles.guard';
 
 @ApiTags('File')
 @Controller('files')
@@ -25,7 +28,8 @@ export class FileController {
   @ApiResponse({ status: 400, description: 'Error al cargar la imagen'})
   @ApiBearerAuth()
   @Post('uploadImage/:id')
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({

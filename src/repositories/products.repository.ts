@@ -4,15 +4,8 @@ import { Categories } from '../entities/categories.entity';
 import { Products } from '../entities/products.entity';
 import { Repository } from 'typeorm';
 import { ProductDto } from '../dto/product.dto';
+import * as data from '../utils/data.json'
 
-type Productos = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  stock: boolean;
-  imgUrl: string;
-};
 
 @Injectable()
 export class ProductsRepository {
